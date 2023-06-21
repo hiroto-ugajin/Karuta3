@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         val textView = binding.text
 
         // initialMessageArrayをシャッフルしてmessageArrayを作成
-        val messageArray = initialMessageArray.toMutableList().shuffled().toTypedArray()
+        var messageArray = initialMessageArray.copyOf().apply { shuffle() }
 
         textView.textSize = 25f // ピクセル単位で指定
         textView.text = messageArray[currentIndex]
@@ -166,9 +166,11 @@ class MainActivity : AppCompatActivity() {
             val shuffledDrawableArray = drawableArray.clone().apply {
                 shuffle()
             }
-            val messageArray = initialMessageArray.toMutableList().shuffled().toTypedArray()
+            messageArray = messageArray.copyOf().apply { shuffle() }
+//            val messageArray = initialMessageArray.toMutableList().shuffled().toTypedArray()
             val textView = binding.text
             textView.text = messageArray[currentIndex]
+            Log.d("mylog", "${messageArray.size}")
 
             for (i in 0 until shuffledDrawableArray.size) {
                 val imageButton = findViewById<ImageButton>(
@@ -179,12 +181,13 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
 
-                val drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
+                var drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
                 imageButton.setImageResource(shuffledDrawableArray[i])
                 imageButton.tag = drawableIndex
 
                 imageButton.alpha = 1.0f
                 imageButton.isEnabled = true
+                imageButton.setOnClickListener(buttonClickListener) // リスナーを設定する
             }
         }
 
@@ -198,9 +201,11 @@ class MainActivity : AppCompatActivity() {
                 )
             )
 
-            val drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
+            var drawableIndex = drawableArray.indexOf(shuffledDrawableArray[i])
             imageButton.setImageResource(shuffledDrawableArray[i])
             imageButton.tag = drawableIndex
+            imageButton.alpha = 1.0f
+            imageButton.isEnabled = true
 
             imageButton.setOnClickListener(buttonClickListener) // リスナーを設定する
         }
